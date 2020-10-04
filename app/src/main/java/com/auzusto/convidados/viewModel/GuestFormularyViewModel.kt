@@ -11,7 +11,7 @@ class GuestFormularyViewModel(application: Application) : AndroidViewModel(appli
 
     private val mContext = application.applicationContext
     private val mGuestRepository: GuestRepository =
-        GuestRepository.getInstance(mContext)
+        GuestRepository(mContext)
 
     private var mSaveGuest = MutableLiveData<Boolean>()
     val saveGuest: LiveData<Boolean> = mSaveGuest
@@ -20,7 +20,11 @@ class GuestFormularyViewModel(application: Application) : AndroidViewModel(appli
     val guest: LiveData<GuestModel> = mGuest
 
     fun save(id: Int, name: String, presence: Boolean) {
-        val guest = GuestModel(id, name, presence)
+        val guest = GuestModel().apply {
+            this.id = id
+            this.name = name
+            this.presence = presence
+        }
 
         if (id == 0) {
             mSaveGuest.value = mGuestRepository.save(guest)
